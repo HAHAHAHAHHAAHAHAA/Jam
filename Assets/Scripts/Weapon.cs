@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -46,6 +47,11 @@ public class Weapon : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, range))
         {
+            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage(damage);
+            }
             Debug.Log($"Попал в: {hit.collider.name}");
         }
 
@@ -60,7 +66,7 @@ public class Weapon : MonoBehaviour
         StartCoroutine(ReloadCoroutine());
     }
 
-    private System.Collections.IEnumerator ReloadCoroutine()
+    private IEnumerator ReloadCoroutine()
     {
         isReloading = true;
         if (reloadSound != null) reloadSound.Play();
