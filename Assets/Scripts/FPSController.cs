@@ -15,7 +15,7 @@ public class FPSController : MonoBehaviour
     private float yaw = 0f;
     private float pitch = 0f;
     private bool isCrouching = false;
-
+    private Weapon currentWeapon;
     private Vector2 moveInput;
     private Vector2 lookInput;
     private bool isSprinting = false;
@@ -26,6 +26,7 @@ public class FPSController : MonoBehaviour
         SetupPlayerInput();
         LockCursor(true);
         SetCrouchState(false);
+        currentWeapon = GetComponentInChildren<Weapon>();
     }
     void Update()
     {
@@ -94,7 +95,13 @@ public class FPSController : MonoBehaviour
         if (isSprinting && moveInput.y > 0) return sprintSpeed;
         return walkSpeed;
     }
-
+    public void OnShoot(InputValue value)
+    {
+        if (currentWeapon != null)
+        {
+            currentWeapon.Shoot();
+        }
+    }
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
