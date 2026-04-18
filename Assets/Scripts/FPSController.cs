@@ -95,11 +95,18 @@ public class FPSController : MonoBehaviour
         if (isSprinting && moveInput.y > 0) return sprintSpeed;
         return walkSpeed;
     }
-    public void OnShoot(InputValue value)
+    public void OnAttack(InputValue value)
     {
         if (currentWeapon != null)
         {
             currentWeapon.Shoot();
+        }
+    }
+    public void OnReload(InputValue value)
+    {
+        if (currentWeapon != null)
+        {
+            currentWeapon.Reload();
         }
     }
     public void OnMove(InputValue value)
