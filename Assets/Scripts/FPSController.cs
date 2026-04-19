@@ -95,6 +95,10 @@ public class FPSController : MonoBehaviour
         if (isSprinting && moveInput.y > 0) return sprintSpeed;
         return walkSpeed;
     }
+    public bool IsCrouching()
+    {
+        return isCrouching;
+    }
     public void OnAttack(InputValue value)
     {
         if (currentWeapon != null)

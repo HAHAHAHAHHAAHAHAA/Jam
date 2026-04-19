@@ -7,44 +7,38 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float damage = 10f;
     [SerializeField] private float attackRange = 20f;
     [SerializeField] private float attackCooldown = 1f;
-    [SerializeField] private float chaseRange = 30f;
 
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private float bulletSpeed = 30f;
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private AudioSource shotSound;
 
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Transform player;
 
-    private float nextAttackTime = 0f;
-    private bool isDead = false;
+    private EnemyVision vision;
+    private float nextAttackTime;
+    private bool isDead;
 
     void Start()
     {
-        if (agent == null) agent = GetComponent<NavMeshAgent>();
-        if (player == null) player = GameObject.FindGameObjectWithTag("Player").transform;
+        agent = GetComponent<NavMeshAgent>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        vision = GetComponent<EnemyVision>();
     }
 
     void Update()
     {
         if (isDead) return;
 
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distanceToPlayer <= attackRange)
-        {
-            Attack();
-        }
-
-        if (distanceToPlayer <= chaseRange)
+        if (vision != null && vision.IsDetected())
         {
             Chase();
-        }
-        else
-        {
-            Idle();
+
+            if (Vector3.Distance(transform.position, player.position) <= attackRange)
+            {
+                Attack();
+            }
         }
     }
 
@@ -53,35 +47,32 @@ public class Enemy : MonoBehaviour
         agent.isStopped = false;
         agent.SetDestination(player.position);
 
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(directionToPlayer);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+        Vector3 direction = (player.position - transform.position).normalized;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 5f);
     }
 
     private void Attack()
     {
         agent.isStopped = true;
 
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
-        transform.rotation = Quaternion.LookRotation(directionToPlayer);
+        if (Time.time < nextAttackTime) return;
 
-        if (Time.time >= nextAttackTime)
-        {
-            nextAttackTime = Time.time + attackCooldown;
-            Shoot();
-        }
+        nextAttackTime = Time.time + attackCooldown;
+        Shoot();
     }
+
     private void Shoot()
     {
-        if (muzzleFlash != null) muzzleFlash.Play();
-        if (shotSound != null) shotSound.Play();
+        muzzleFlash?.Play();
+        shotSound?.Play();
 
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Destroy(bullet, 5f);
     }
-    private void Idle()
+
+    public void OnDetected()
     {
-        agent.isStopped = true;
+        Debug.Log("Враг обнаружил игрока");
     }
 
     public void TakeDamage(float amount)
@@ -90,10 +81,7 @@ public class Enemy : MonoBehaviour
 
         health -= amount;
 
-        if (health <= 0)
-        {
-            Die();
-        }
+        if (health <= 0) Die();
     }
 
     private void Die()
