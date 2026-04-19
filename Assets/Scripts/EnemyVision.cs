@@ -6,6 +6,7 @@ public class EnemyVision : MonoBehaviour
     [Header("Vision")]
     [SerializeField] private float viewRange = 15f;
     [SerializeField] private float viewAngle = 60f;
+    [SerializeField] private float detectionRange = 3f;
     [SerializeField] private LayerMask obstacleMask;
     [SerializeField] private Transform player;
 
@@ -17,6 +18,7 @@ public class EnemyVision : MonoBehaviour
     private Camera playerCamera;
     private float currentDetection = 0f;
     private bool canSeePlayer = false;
+    private bool isInDetectionRange = false;
 
     void Start()
     {
@@ -50,6 +52,15 @@ public class EnemyVision : MonoBehaviour
     {
         Vector3 directionToPlayer = player.position - transform.position;
         float distanceToPlayer = directionToPlayer.magnitude;
+
+        isInDetectionRange = distanceToPlayer <= detectionRange;
+
+        if (isInDetectionRange)
+        {
+            canSeePlayer = true;
+            return;
+        }
+
         float effectiveRange = GetEffectiveRange();
 
         if (!IsWithinRange(distanceToPlayer, effectiveRange))
@@ -96,14 +107,25 @@ public class EnemyVision : MonoBehaviour
     {
         if (canSeePlayer)
         {
-            currentDetection += Time.deltaTime / detectTime;
-            if (currentDetection >= 1f)
+            if (isInDetectionRange)
             {
-                currentDetection = 1f;
-                OnFullDetection();
+                if (currentDetection < 1f)
+                {
+                    currentDetection = 1f;
+                    OnFullDetection();
+                }
+            }
+            else
+            {
+                currentDetection += Time.deltaTime / detectTime;
+                if (currentDetection >= 1f)
+                {
+                    currentDetection = 1f;
+                    OnFullDetection();
+                }
             }
         }
-        else
+        else if (currentDetection < 1f)
         {
             currentDetection -= Time.deltaTime / detectTime;
             if (currentDetection <= 0f)

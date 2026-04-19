@@ -12,9 +12,9 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float reloadTime = 2f;
 
     [Header("Визуал")]
-    [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField] private AudioSource shotSound;
-    [SerializeField] private AudioSource reloadSound;
+    [SerializeField] private ParticleSystem customMuzzleFlash;
+    [SerializeField] private AudioClip shotClip;
+    [SerializeField] private AudioClip reloadClip;
 
     private int currentAmmo;
     private bool isReloading = false;
@@ -40,8 +40,19 @@ public class Weapon : MonoBehaviour
         currentAmmo--;
         nextFireTime = Time.time + fireRate;
 
-        if (muzzleFlash != null) muzzleFlash.Play();
-        if (shotSound != null) shotSound.Play();
+        if (customMuzzleFlash != null)
+        {
+            ParticleManager.Instance?.PlayParticle(customMuzzleFlash, transform.position, transform.rotation, 0.5f);
+        }
+        else
+        {
+            ParticleManager.Instance?.PlayMuzzleFlash(transform.position, transform.rotation);
+        }
+
+        if (shotClip != null)
+        {
+            AudioManager.Instance?.PlaySound(shotClip, transform.position, 0.5f);
+        }
 
         Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
 
@@ -51,6 +62,7 @@ public class Weapon : MonoBehaviour
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
+                ParticleManager.Instance?.PlayBlood(hit.point);
             }
             Debug.Log($"Попал в: {hit.collider.name}");
         }
@@ -69,7 +81,11 @@ public class Weapon : MonoBehaviour
     private IEnumerator ReloadCoroutine()
     {
         isReloading = true;
-        if (reloadSound != null) reloadSound.Play();
+
+        if (reloadClip != null)
+        {
+            AudioManager.Instance?.PlaySound(reloadClip, transform.position, 0.7f);
+        }
 
         yield return new WaitForSeconds(reloadTime);
 

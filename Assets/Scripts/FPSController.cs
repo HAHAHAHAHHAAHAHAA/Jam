@@ -6,7 +6,7 @@ public class FPSController : MonoBehaviour
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float sprintSpeed = 10f;
     [SerializeField] private float crouchSpeed = 2.5f;
-    [SerializeField] private float mouseSensitivity = 2f;
+    [SerializeField] private float defaultMouseSensitivity = 2f;
     [SerializeField] private float crouchHeight = 0.5f;
     [SerializeField] private float standHeight = 1f;
 
@@ -19,6 +19,7 @@ public class FPSController : MonoBehaviour
     private Vector2 moveInput;
     private Vector2 lookInput;
     private bool isSprinting = false;
+    private float mouseSensitivity;
 
     void Start()
     {
@@ -27,11 +28,38 @@ public class FPSController : MonoBehaviour
         LockCursor(true);
         SetCrouchState(false);
         currentWeapon = GetComponentInChildren<Weapon>();
+
+        if (SettingsManager.Instance != null)
+        {
+            mouseSensitivity = SettingsManager.Instance.GetSensitivity();
+            SettingsManager.Instance.OnSettingsChanged += UpdateSensitivity;
+        }
+        else
+        {
+            mouseSensitivity = defaultMouseSensitivity;
+        }
     }
+
+    void OnDestroy()
+    {
+        if (SettingsManager.Instance != null)
+        {
+            SettingsManager.Instance.OnSettingsChanged -= UpdateSensitivity;
+        }
+    }
+
     void Update()
     {
         HandleMouseLook();
         HandleMovement();
+    }
+
+    private void UpdateSensitivity()
+    {
+        if (SettingsManager.Instance != null)
+        {
+            mouseSensitivity = SettingsManager.Instance.GetSensitivity();
+        }
     }
 
     private void InitializeComponents()
@@ -95,10 +123,12 @@ public class FPSController : MonoBehaviour
         if (isSprinting && moveInput.y > 0) return sprintSpeed;
         return walkSpeed;
     }
+
     public bool IsCrouching()
     {
         return isCrouching;
     }
+
     public void OnAttack(InputValue value)
     {
         if (currentWeapon != null)
@@ -106,6 +136,7 @@ public class FPSController : MonoBehaviour
             currentWeapon.Shoot();
         }
     }
+
     public void OnReload(InputValue value)
     {
         if (currentWeapon != null)
@@ -113,6 +144,7 @@ public class FPSController : MonoBehaviour
             currentWeapon.Reload();
         }
     }
+
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();

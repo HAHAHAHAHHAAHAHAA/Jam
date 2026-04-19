@@ -7,11 +7,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float damage = 10f;
     [SerializeField] private float attackRange = 20f;
     [SerializeField] private float attackCooldown = 1f;
+    [SerializeField] private float chaseMemoryTime = 5f;
 
     [SerializeField] private Transform firePoint;
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private ParticleSystem muzzleFlash;
-    [SerializeField] private AudioSource shotSound;
+    [SerializeField] private ParticleSystem customMuzzleFlash;
+    [SerializeField] private AudioClip shotClip;
 
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Transform player;
@@ -19,6 +20,8 @@ public class Enemy : MonoBehaviour
     private EnemyVision vision;
     private float nextAttackTime;
     private bool isDead;
+    private float chaseMemoryTimer = 0f;
+    private bool isChasing = false;
 
     void Start()
     {
@@ -30,15 +33,44 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         if (isDead) return;
+        HandleBehavior();
+    }
 
-        if (vision != null && vision.IsDetected())
+    private void HandleBehavior()
+    {
+        bool isDetected = vision != null && vision.IsDetected();
+
+        if (isDetected)
         {
-            Chase();
+            chaseMemoryTimer = chaseMemoryTime;
 
-            if (Vector3.Distance(transform.position, player.position) <= attackRange)
+            if (!isChasing)
             {
-                Attack();
+                isChasing = true;
             }
+            ChaseAndAttack();
+        }
+        else if (chaseMemoryTimer > 0)
+        {
+            chaseMemoryTimer -= Time.deltaTime;
+            ChaseAndAttack();
+        }
+        else
+        {
+            if (isChasing)
+            {
+                isChasing = false;
+            }
+        }
+    }
+
+    private void ChaseAndAttack()
+    {
+        Chase();
+
+        if (Vector3.Distance(transform.position, player.position) <= attackRange)
+        {
+            Attack();
         }
     }
 
@@ -63,8 +95,19 @@ public class Enemy : MonoBehaviour
 
     private void Shoot()
     {
-        muzzleFlash?.Play();
-        shotSound?.Play();
+        if (customMuzzleFlash != null)
+        {
+            ParticleManager.Instance?.PlayParticle(customMuzzleFlash, firePoint.position, firePoint.rotation, 0.5f);
+        }
+        else
+        {
+            ParticleManager.Instance?.PlayMuzzleFlash(firePoint.position, firePoint.rotation);
+        }
+
+        if (shotClip != null)
+        {
+            AudioManager.Instance?.PlaySound(shotClip, firePoint.position, 0.5f);
+        }
 
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Destroy(bullet, 5f);
@@ -72,7 +115,7 @@ public class Enemy : MonoBehaviour
 
     public void OnDetected()
     {
-        Debug.Log("Враг обнаружил игрока");
+
     }
 
     public void TakeDamage(float amount)
@@ -88,6 +131,7 @@ public class Enemy : MonoBehaviour
     {
         isDead = true;
         agent.isStopped = true;
+        ParticleManager.Instance?.PlayExplosion(transform.position);
         Destroy(gameObject, 2f);
     }
 }
