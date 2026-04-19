@@ -1,3 +1,15 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:29c125923fe6e29f90190d4fce1c82d660e7051546e2c9d02908d18c9cf2436c
-size 146
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1386491679 &1
+PresetManager:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_DefaultPresets:
+  - first:
+      m_NativeTypeID: 114
+      m_ManagedTypePPtr: {fileID: 11500000, guid: c46f07b5ed07e4e92aa78254188d3d10, type: 3}
+      m_ManagedTypeFallback: 
+    second:
+    - m_Preset: {fileID: 2655988077585873504, guid: 976897479950ad2449790c252c822e23, type: 2}
+      m_Filter: 
+      m_Disabled: 0
