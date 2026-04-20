@@ -134,6 +134,12 @@ MonoBehaviour:
   motorTorque: 1000
   brakeTorque: 10000
   maxSteeringAngle: 30
+  steeringSpeed: 3
+  brakeForce: 4000
+  engineSource: {fileID: 0}
+  minVolume: 0.1
+  maxVolume: 1
+  volumeSpeed: 2
   frontLeftWheel: {fileID: 408048045}
   frontRightWheel: {fileID: 1132570531}
   rearLeftWheel: {fileID: 1102282331}
@@ -312,7 +318,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7644360707672163555, guid: f430073c636116b4b9c0f5e6ddcde097, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8954649977093916390, guid: f430073c636116b4b9c0f5e6ddcde097, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -950,6 +956,10 @@ PrefabInstance:
     - target: {fileID: 2385062032742180383, guid: 9c2a4d257a9d83547804bc15ea90376c, type: 3}
       propertyPath: m_Name
       value: car
+      objectReference: {fileID: 0}
+    - target: {fileID: 2385062032742180383, guid: 9c2a4d257a9d83547804bc15ea90376c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4635335117943369236, guid: 9c2a4d257a9d83547804bc15ea90376c, type: 3}
       propertyPath: m_LocalPosition.x

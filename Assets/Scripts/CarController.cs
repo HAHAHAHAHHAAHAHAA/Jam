@@ -4,9 +4,19 @@ using UnityEngine.InputSystem;
 public class CarController : MonoBehaviour
 {
     [Header("Движение")]
-    [SerializeField] private float motorTorque = 1000f;
-    [SerializeField] private float brakeTorque = 2000f;
-    [SerializeField] private float maxSteeringAngle = 30f;
+    [SerializeField] private float motorTorque = 600f;
+    [SerializeField] private float brakeTorque = 3000f;
+    [SerializeField] private float maxSteeringAngle = 28f;
+
+    [Header("Steering Smoothing")]
+    [SerializeField] private float steeringSpeed = 3f;
+    [SerializeField] private float brakeForce = 4000f;
+
+    [Header("Engine Sound")]
+    [SerializeField] private AudioSource engineSource;
+    [SerializeField] private float minVolume = 0.1f;
+    [SerializeField] private float maxVolume = 1f;
+    [SerializeField] private float volumeSpeed = 2f;
 
     [Header("Колёса")]
     [SerializeField] private WheelCollider frontLeftWheel;
@@ -23,13 +33,27 @@ public class CarController : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
     private float currentSteeringAngle;
+    private float targetSteeringAngle;
     private bool isBraking;
+    private float currentVolume = 0.1f;
+
+    void Start()
+    {
+        LockCursor(true);
+
+        if (engineSource != null)
+        {
+            engineSource.volume = minVolume;
+            engineSource.Play();
+        }
+    }
 
     void Update()
     {
         HandleMotor();
         HandleSteering();
         UpdateWheelMeshes();
+        HandleEngineSound();
     }
 
     private void HandleMotor()
@@ -39,10 +63,10 @@ public class CarController : MonoBehaviour
 
         if (isBraking)
         {
-            frontLeftWheel.brakeTorque = brakeTorque;
-            frontRightWheel.brakeTorque = brakeTorque;
-            rearLeftWheel.brakeTorque = brakeTorque;
-            rearRightWheel.brakeTorque = brakeTorque;
+            frontLeftWheel.brakeTorque = brakeForce;
+            frontRightWheel.brakeTorque = brakeForce;
+            rearLeftWheel.brakeTorque = brakeForce;
+            rearRightWheel.brakeTorque = brakeForce;
         }
         else
         {
@@ -55,9 +79,30 @@ public class CarController : MonoBehaviour
 
     private void HandleSteering()
     {
-        currentSteeringAngle = maxSteeringAngle * horizontalInput;
+        targetSteeringAngle = maxSteeringAngle * horizontalInput;
+        currentSteeringAngle = Mathf.Lerp(currentSteeringAngle, targetSteeringAngle, Time.deltaTime * steeringSpeed);
+
         frontLeftWheel.steerAngle = currentSteeringAngle;
         frontRightWheel.steerAngle = currentSteeringAngle;
+    }
+
+    private void HandleEngineSound()
+    {
+        if (engineSource == null) return;
+
+        float targetVolume = Mathf.Abs(verticalInput);
+        targetVolume = Mathf.Clamp(targetVolume, minVolume, maxVolume);
+
+        currentVolume = Mathf.Lerp(currentVolume, targetVolume, Time.deltaTime * volumeSpeed);
+
+        if (AudioManager.Instance != null)
+        {
+            engineSource.volume = currentVolume * AudioManager.Instance.GetSFXVolume() * AudioManager.Instance.GetMasterVolume();
+        }
+        else
+        {
+            engineSource.volume = currentVolume;
+        }
     }
 
     private void UpdateWheelMeshes()
@@ -77,6 +122,20 @@ public class CarController : MonoBehaviour
         collider.GetWorldPose(out position, out rotation);
         mesh.position = position;
         mesh.rotation = rotation;
+    }
+
+    private void LockCursor(bool locked)
+    {
+        if (locked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     public void OnMove(InputValue value)

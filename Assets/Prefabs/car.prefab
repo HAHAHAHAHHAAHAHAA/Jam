@@ -55,7 +55,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 2
+    m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
@@ -578,7 +578,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 2
+    m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
@@ -928,9 +928,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 732e399d35e1f0a4eb61d2e83e578de2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarController
-  motorTorque: 1000
+  motorTorque: 600
   brakeTorque: 20000
-  maxSteeringAngle: 30
+  maxSteeringAngle: 45
+  steeringSpeed: 3
+  brakeForce: 4000
   frontLeftWheel: {fileID: 7267488194135526882}
   frontRightWheel: {fileID: 4455838076220988497}
   rearLeftWheel: {fileID: 2664989845970323514}
@@ -1757,7 +1759,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 2
+    m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
@@ -2672,7 +2674,7 @@ WheelCollider:
     m_ExtremumValue: 1
     m_AsymptoteSlip: 0.8
     m_AsymptoteValue: 0.5
-    m_Stiffness: 2
+    m_Stiffness: 1
   m_SidewaysFriction:
     m_ExtremumSlip: 0.2
     m_ExtremumValue: 1
