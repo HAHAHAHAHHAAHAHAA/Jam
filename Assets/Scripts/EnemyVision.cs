@@ -20,11 +20,12 @@ public class EnemyVision : MonoBehaviour
     private bool canSeePlayer = false;
     private bool isInDetectionRange = false;
 
-    void Start()
+    private void Awake()
     {
         InitializeReferences();
         SetupDetectionBar();
     }
+
 
     void Update()
     {
@@ -145,7 +146,7 @@ public class EnemyVision : MonoBehaviour
         detectionBar.fillAmount = currentDetection;
     }
 
-    private void OnFullDetection()
+    protected virtual void OnFullDetection()
     {
         GetComponent<Enemy>()?.OnDetected();
     }
@@ -153,5 +154,20 @@ public class EnemyVision : MonoBehaviour
     public bool IsDetected()
     {
         return currentDetection >= 1f;
+    }
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, viewRange);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRange);
+
+        Vector3 leftBoundary = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward * viewRange;
+        Vector3 rightBoundary = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward * viewRange;
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
+        Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
     }
 }

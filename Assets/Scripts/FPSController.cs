@@ -14,6 +14,8 @@ public class FPSController : MonoBehaviour
     private Camera playerCamera;
     private float yaw = 0f;
     private float pitch = 0f;
+    private float verticalVelocity = 0f;
+    private float gravity = -9.81f;
     private bool isCrouching = false;
     private Weapon currentWeapon;
     private Vector2 moveInput;
@@ -114,6 +116,15 @@ public class FPSController : MonoBehaviour
     {
         Vector3 move = transform.right * moveInput.x + transform.forward * moveInput.y;
         float speed = GetCurrentSpeed();
+
+        if (controller.isGrounded && verticalVelocity < 0)
+        {
+            verticalVelocity = -2f;
+        }
+
+        verticalVelocity += gravity * Time.deltaTime;
+        move.y = verticalVelocity;
+
         controller.Move(move * speed * Time.deltaTime);
     }
 

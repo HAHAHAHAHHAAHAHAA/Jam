@@ -112,12 +112,10 @@ public class Enemy : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Destroy(bullet, 5f);
     }
-
     public void OnDetected()
     {
 
     }
-
     public void TakeDamage(float amount)
     {
         if (isDead) return;
