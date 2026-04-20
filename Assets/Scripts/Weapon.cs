@@ -16,6 +16,14 @@ public class Weapon : MonoBehaviour
     [SerializeField] private AudioClip shotClip;
     [SerializeField] private AudioClip reloadClip;
 
+    [Header("Trail")]
+    [SerializeField] private LineRenderer bulletTrail;
+    [SerializeField] private float trailDuration = 0.05f;
+    [Header("Fire Point")]
+    [SerializeField] private Transform firePoint;
+    [Header("Animations")]
+    [SerializeField] private Animator weaponAnimator;
+
     private int currentAmmo;
     private bool isReloading = false;
     private float nextFireTime = 0f;
@@ -25,6 +33,8 @@ public class Weapon : MonoBehaviour
     {
         playerCamera = GetComponentInParent<Camera>();
         currentAmmo = magazineSize;
+
+        if (weaponAnimator == null) weaponAnimator = GetComponent<Animator>();
     }
 
     public void Shoot()
@@ -39,6 +49,11 @@ public class Weapon : MonoBehaviour
 
         currentAmmo--;
         nextFireTime = Time.time + fireRate;
+
+        if (weaponAnimator != null)
+        {
+            weaponAnimator.Play("shoot");
+        }
 
         if (customMuzzleFlash != null)
         {
@@ -55,9 +70,12 @@ public class Weapon : MonoBehaviour
         }
 
         Ray ray = playerCamera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+        Vector3 hitPoint = ray.GetPoint(range);
 
         if (Physics.Raycast(ray, out RaycastHit hit, range))
         {
+            hitPoint = hit.point;
+
             Enemy enemy = hit.collider.GetComponent<Enemy>();
             if (enemy != null)
             {
@@ -65,6 +83,25 @@ public class Weapon : MonoBehaviour
                 ParticleManager.Instance?.PlayBlood(hit.point);
             }
             Debug.Log($"Попал в: {hit.collider.name}");
+        }
+
+        if (bulletTrail != null)
+        {
+            LineRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
+            trail.SetPosition(0, Vector3.zero);
+
+            Vector3 endPoint = hitPoint;
+            if (!Physics.Raycast(ray, out hit, range))
+            {
+                endPoint = ray.GetPoint(100);
+            }
+            else
+            {
+                endPoint = hit.point;
+            }
+
+            trail.SetPosition(1, trail.transform.InverseTransformPoint(endPoint));
+            Destroy(trail.gameObject, trailDuration);
         }
 
         Debug.Log($"Выстрел. Патроны: {currentAmmo}/{magazineSize}");
@@ -81,6 +118,11 @@ public class Weapon : MonoBehaviour
     private IEnumerator ReloadCoroutine()
     {
         isReloading = true;
+
+        if (weaponAnimator != null)
+        {
+            weaponAnimator.Play("reload");
+        }
 
         if (reloadClip != null)
         {

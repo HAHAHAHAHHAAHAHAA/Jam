@@ -17,23 +17,31 @@ public class Enemy : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Transform player;
 
+    [Header("Animations")]
+    [SerializeField] private Animator animator;
+
     private EnemyVision vision;
     private float nextAttackTime;
     private bool isDead;
     private float chaseMemoryTimer = 0f;
     private bool isChasing = false;
+    private bool isAttacking = false;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         vision = GetComponent<EnemyVision>();
+
+        if (animator == null) animator = GetComponent<Animator>();
     }
 
     void Update()
     {
         if (isDead) return;
+
         HandleBehavior();
+        UpdateAnimations();
     }
 
     private void HandleBehavior()
@@ -48,32 +56,39 @@ public class Enemy : MonoBehaviour
             {
                 isChasing = true;
             }
-            ChaseAndAttack();
+
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+            if (distanceToPlayer <= attackRange)
+            {
+                isAttacking = true;
+                isChasing = false;
+                Attack();
+            }
+            else
+            {
+                isAttacking = false;
+                isChasing = true;
+                Chase();
+            }
         }
         else if (chaseMemoryTimer > 0)
         {
             chaseMemoryTimer -= Time.deltaTime;
-            ChaseAndAttack();
+            isAttacking = false;
+            isChasing = true;
+            Chase();
         }
         else
         {
-            if (isChasing)
+            if (isChasing || isAttacking)
             {
                 isChasing = false;
+                isAttacking = false;
+                StopMoving();
             }
         }
     }
-
-    private void ChaseAndAttack()
-    {
-        Chase();
-
-        if (Vector3.Distance(transform.position, player.position) <= attackRange)
-        {
-            Attack();
-        }
-    }
-
     private void Chase()
     {
         agent.isStopped = false;
@@ -87,10 +102,17 @@ public class Enemy : MonoBehaviour
     {
         agent.isStopped = true;
 
+        Vector3 direction = (player.position - transform.position).normalized;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
+
         if (Time.time < nextAttackTime) return;
 
         nextAttackTime = Time.time + attackCooldown;
         Shoot();
+    }
+    private void StopMoving()
+    {
+        agent.isStopped = true;
     }
 
     private void Shoot()
@@ -112,10 +134,35 @@ public class Enemy : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Destroy(bullet, 5f);
     }
+
+    private void UpdateAnimations()
+    {
+        if (animator == null) return;
+
+        if (isDead)
+        {
+            animator.Play("Dead");
+            return;
+        }
+
+        bool isMoving = agent.velocity.magnitude > 0.5f;
+
+        if (isMoving)
+        {
+            animator.SetBool("Running", true);
+            animator.SetBool("Idle", false);
+        }
+        else
+        {
+            animator.SetBool("Running", false);
+            animator.SetBool("Idle", true);
+        }
+    }
     public void OnDetected()
     {
 
     }
+
     public void TakeDamage(float amount)
     {
         if (isDead) return;
@@ -128,7 +175,10 @@ public class Enemy : MonoBehaviour
     private void Die()
     {
         isDead = true;
+        isChasing = false;
+        isAttacking = false;
         agent.isStopped = true;
+        animator.Play("Dead");
         ParticleManager.Instance?.PlayExplosion(transform.position);
         Destroy(gameObject, 2f);
     }
