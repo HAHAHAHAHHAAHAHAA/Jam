@@ -169,6 +169,11 @@ public class Enemy : MonoBehaviour
 
         health -= amount;
 
+        if (vision != null)
+        {
+            vision.ForceDetect();
+        }
+
         if (health <= 0) Die();
     }
 

@@ -10,7 +10,7 @@ public class Weapon : MonoBehaviour
     [SerializeField] private float fireRate = 0.1f;
     [SerializeField] private int magazineSize = 30;
     [SerializeField] private float reloadTime = 2f;
-
+    [SerializeField] private float notifyRadius = 30;
     [Header("Визуал")]
     [SerializeField] private ParticleSystem customMuzzleFlash;
     [SerializeField] private AudioClip shotClip;
@@ -84,7 +84,7 @@ public class Weapon : MonoBehaviour
             }
             Debug.Log($"Попал в: {hit.collider.name}");
         }
-
+        NotifyEnemies(transform.position, notifyRadius);
         if (bulletTrail != null)
         {
             LineRenderer trail = Instantiate(bulletTrail, firePoint.position, Quaternion.identity);
@@ -106,7 +106,19 @@ public class Weapon : MonoBehaviour
 
         Debug.Log($"Выстрел. Патроны: {currentAmmo}/{magazineSize}");
     }
+    private void NotifyEnemies(Vector3 position, float radius)
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(position, radius);
 
+        foreach (Collider col in hitColliders)
+        {
+            EnemyVision vision = col.GetComponent<EnemyVision>();
+            if (vision != null)
+            {
+                vision.NotifyShot(position);
+            }
+        }
+    }
     public void Reload()
     {
         if (isReloading) return;

@@ -137,7 +137,26 @@ public class EnemyVision : MonoBehaviour
 
         currentDetection = Mathf.Clamp01(currentDetection);
     }
+    public void ForceDetect()
+    {
+        currentDetection = 1f;
+        OnFullDetection();
+    }
 
+    public void NotifyShot(Vector3 shotPosition)
+    {
+        float distanceToShot = Vector3.Distance(transform.position, shotPosition);
+
+        if (distanceToShot <= viewRange)
+        {
+            currentDetection += 0.9f;
+            if (currentDetection >= 1f)
+            {
+                currentDetection = 1f;
+                OnFullDetection();
+            }
+        }
+    }
     private void UpdateDetectionBarUI()
     {
         if (detectionBar == null) return;
