@@ -24,7 +24,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySound(AudioClip clip, Vector3 position, float volume = 1f)
+    public void PlaySound(AudioClip clip, Vector3 position, float volume = 1f, float pitch = 1f)
     {
         if (clip == null || sfxPrefab == null) return;
 
@@ -35,11 +35,11 @@ public class AudioManager : MonoBehaviour
         {
             source.clip = clip;
             source.volume = volume * sfxVolume * masterVolume;
+            source.pitch = pitch;
             source.Play();
             Destroy(sfxObject, clip.length);
         }
     }
-
     public void PlaySoundOneShot(AudioClip clip, float volume = 1f)
     {
         if (clip == null || sfxPrefab == null) return;

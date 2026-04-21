@@ -162,7 +162,8 @@ public class FPSController : MonoBehaviour
         if (clip != null && AudioManager.Instance != null)
         {
             float volume = isCrouching ? 0.5f : (isSprinting ? 1f : 0.75f);
-            AudioManager.Instance.PlaySound(clip, transform.position, volume);
+            float pitch = Random.Range(0.9f, 1.1f);
+            AudioManager.Instance.PlaySound(clip, transform.position, volume, pitch);
         }
     }
     private float GetCurrentSpeed()
