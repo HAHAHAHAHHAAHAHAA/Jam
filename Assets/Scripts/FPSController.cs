@@ -9,7 +9,14 @@ public class FPSController : MonoBehaviour
     [SerializeField] private float defaultMouseSensitivity = 2f;
     [SerializeField] private float crouchHeight = 0.5f;
     [SerializeField] private float standHeight = 1f;
+    [Header("Footstep Audio")]
+    [SerializeField] private AudioClip[] footstepClips;
+    [SerializeField] private float walkStepInterval = 0.5f;
+    [SerializeField] private float sprintStepInterval = 0.3f;
+    [SerializeField] private float crouchStepInterval = 0.7f;
 
+    private float stepTimer = 0f;
+    private float currentStepInterval => isCrouching ? crouchStepInterval : (isSprinting ? sprintStepInterval : walkStepInterval);
     private CharacterController controller;
     private Camera playerCamera;
     private float yaw = 0f;
@@ -54,6 +61,7 @@ public class FPSController : MonoBehaviour
     {
         HandleMouseLook();
         HandleMovement();
+        HandleFootsteps();
     }
 
     private void UpdateSensitivity()
@@ -127,7 +135,36 @@ public class FPSController : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
     }
+    private void HandleFootsteps()
+    {
+        bool isMoving = moveInput.magnitude > 0.1f && controller.isGrounded;
 
+        if (isMoving)
+        {
+            stepTimer -= Time.deltaTime;
+            if (stepTimer <= 0f)
+            {
+                PlayFootstepSound();
+                stepTimer = currentStepInterval;
+            }
+        }
+        else
+        {
+            stepTimer = 0f;
+        }
+    }
+
+    private void PlayFootstepSound()
+    {
+        if (footstepClips == null || footstepClips.Length == 0) return;
+
+        AudioClip clip = footstepClips[Random.Range(0, footstepClips.Length)];
+        if (clip != null && AudioManager.Instance != null)
+        {
+            float volume = isCrouching ? 0.5f : (isSprinting ? 1f : 0.75f);
+            AudioManager.Instance.PlaySound(clip, transform.position, volume);
+        }
+    }
     private float GetCurrentSpeed()
     {
         if (isCrouching) return crouchSpeed;

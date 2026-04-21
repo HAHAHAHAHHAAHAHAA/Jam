@@ -13,6 +13,8 @@ public class CarAI : MonoBehaviour
     private int currentWaypoint = 0;
     private Vector3 targetPosition;
     private bool isGameEnded = false;
+    private bool isWaitingForVictory = false;
+    private float victoryTimer = 0f;
 
     void Start()
     {
@@ -23,6 +25,16 @@ public class CarAI : MonoBehaviour
     void Update()
     {
         if (isGameEnded) return;
+
+        if (isWaitingForVictory)
+        {
+            victoryTimer -= Time.deltaTime;
+            if (victoryTimer <= 0f)
+            {
+                OnVictory();
+            }
+            return;
+        }
 
         CheckDistance();
         FollowWaypoints();
@@ -39,7 +51,8 @@ public class CarAI : MonoBehaviour
             currentWaypoint++;
             if (currentWaypoint >= waypoints.Length)
             {
-                currentWaypoint = waypoints.Length - 1;
+                isWaitingForVictory = true;
+                victoryTimer = 2f;
                 return;
             }
             targetPosition = waypoints[currentWaypoint].position;
@@ -67,11 +80,18 @@ public class CarAI : MonoBehaviour
         }
     }
 
+    private void OnVictory()
+    {
+        if (isGameEnded) return;
+        isGameEnded = true;
+        ComicManager.Instance?.Victory();
+    }
+
     private void OnDefeat()
     {
         if (isGameEnded) return;
         isGameEnded = true;
         Debug.Log("Поражение! Игрок отдалился от машины");
-        GameOverManager.Instance?.GameOver();
+        ComicManager.Instance?.GameOver();
     }
 }
