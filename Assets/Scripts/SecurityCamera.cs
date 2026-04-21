@@ -36,9 +36,6 @@ public class SecurityCamera : EnemyVision
 
     protected override void OnFullDetection()
     {
-        Debug.Log("Камера обнаружила игрока!");
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex
-        );
+        GameOverManager.Instance.GameOver();
     }
 }

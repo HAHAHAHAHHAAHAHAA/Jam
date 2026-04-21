@@ -32,7 +32,7 @@ public class PlayerStats : MonoBehaviour
     private void Die()
     {
         Debug.Log("Игрок умер");
-        Time.timeScale = 0f;
+        GameOverManager.Instance?.GameOver();
     }
 
     public float GetHealth() => currentHealth;
