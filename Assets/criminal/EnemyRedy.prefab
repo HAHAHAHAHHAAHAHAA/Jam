@@ -757,7 +757,7 @@ MonoBehaviour:
   firePoint: {fileID: 3647091424822631761}
   bulletPrefab: {fileID: 714221737524652903, guid: eea6f816355eeae4f949f5b6ce941a9b, type: 3}
   customMuzzleFlash: {fileID: 0}
-  shotClip: {fileID: 0}
+  shotClip: {fileID: 8300000, guid: 24742450d402716408e8a2d1cc5d4a18, type: 3}
   agent: {fileID: 5881453725194916421}
   player: {fileID: 0}
   animator: {fileID: 3904506625039900549}
