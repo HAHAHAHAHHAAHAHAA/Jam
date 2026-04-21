@@ -117,13 +117,16 @@ public class Enemy : MonoBehaviour
 
     private void Shoot()
     {
+        Vector3 exactDirection = (player.position - firePoint.position).normalized;
+        Quaternion exactRotation = Quaternion.LookRotation(exactDirection);
+
         if (customMuzzleFlash != null)
         {
-            ParticleManager.Instance?.PlayParticle(customMuzzleFlash, firePoint.position, firePoint.rotation, 0.5f);
+            ParticleManager.Instance?.PlayParticle(customMuzzleFlash, firePoint.position, exactRotation, 0.5f);
         }
         else
         {
-            ParticleManager.Instance?.PlayMuzzleFlash(firePoint.position, firePoint.rotation);
+            ParticleManager.Instance?.PlayMuzzleFlash(firePoint.position, exactRotation);
         }
 
         if (shotClip != null)
@@ -131,7 +134,7 @@ public class Enemy : MonoBehaviour
             AudioManager.Instance?.PlaySound(shotClip, firePoint.position, 0.5f);
         }
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, exactRotation);
         Destroy(bullet, 5f);
     }
 
