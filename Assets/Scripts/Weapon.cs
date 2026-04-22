@@ -76,10 +76,17 @@ public class Weapon : MonoBehaviour
         {
             hitPoint = hit.point;
 
-            Enemy enemy = hit.collider.GetComponent<Enemy>();
+            Enemy enemy = hit.collider.GetComponentInParent<Enemy>();
             if (enemy != null)
             {
-                enemy.TakeDamage(damage);
+                if (hit.collider.CompareTag("Head"))
+                {
+                    enemy.Die();
+                }
+                else
+                {
+                    enemy.TakeDamage(damage);
+                }
                 ParticleManager.Instance?.PlayBlood(hit.point);
             }
             Debug.Log($"Попал в: {hit.collider.name}");

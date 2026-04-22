@@ -202,7 +202,7 @@ public class Enemy : MonoBehaviour
         if (health <= 0) Die();
     }
 
-    private void Die()
+    public void Die()
     {
         animator.SetBool("Idle", false);
         animator.SetBool("Running", false);

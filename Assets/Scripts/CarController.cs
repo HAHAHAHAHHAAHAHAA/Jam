@@ -8,6 +8,9 @@ public class CarController : MonoBehaviour
     [SerializeField] private float brakeTorque = 3000f;
     [SerializeField] private float maxSteeringAngle = 28f;
 
+    [Header("Speed Limit")]
+    [SerializeField] private float maxSpeed = 50f;
+
     [Header("Steering Smoothing")]
     [SerializeField] private float steeringSpeed = 3f;
     [SerializeField] private float brakeForce = 4000f;
@@ -29,6 +32,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private Transform frontRightMesh;
     [SerializeField] private Transform rearLeftMesh;
     [SerializeField] private Transform rearRightMesh;
+
 
     private float horizontalInput;
     private float verticalInput;
@@ -61,8 +65,18 @@ public class CarController : MonoBehaviour
     }
     private void HandleMotor()
     {
-        rearLeftWheel.motorTorque = verticalInput * motorTorque;
-        rearRightWheel.motorTorque = verticalInput * motorTorque;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        float currentSpeed = rb.linearVelocity.magnitude;
+
+        float torque = verticalInput * motorTorque;
+
+        if (currentSpeed >= maxSpeed && torque > 0)
+        {
+            torque = 0;
+        }
+
+        rearLeftWheel.motorTorque = torque;
+        rearRightWheel.motorTorque = torque;
 
         if (isBraking)
         {
@@ -79,7 +93,6 @@ public class CarController : MonoBehaviour
             rearRightWheel.brakeTorque = 0;
         }
     }
-
     private void HandleSteering()
     {
         targetSteeringAngle = maxSteeringAngle * horizontalInput;
@@ -123,6 +136,12 @@ public class CarController : MonoBehaviour
         Vector3 position;
         Quaternion rotation;
         collider.GetWorldPose(out position, out rotation);
+
+        if (mesh == frontRightMesh || mesh == rearRightMesh)
+        {
+            position += transform.right * -0.15f;
+        }
+
         mesh.position = position;
         mesh.rotation = rotation;
     }

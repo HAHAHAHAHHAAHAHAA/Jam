@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Enemy
   - Interactable
+  - Head
   layers:
   - Default
   - TransparentFX
