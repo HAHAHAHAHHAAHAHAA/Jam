@@ -26129,7 +26129,7 @@ MonoBehaviour:
   version: 2
   globalVolume: 0
   mode: 1
-  size: {x: 698.057, y: 72.320145, z: 841.61865}
+  size: {x: 698.057, y: 36.052315, z: 841.61865}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -26167,7 +26167,7 @@ Transform:
   m_GameObject: {fileID: 728842408}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.05612, y: 25.590752, z: -129.16028}
+  m_LocalPosition: {x: 98.05612, y: 8.533855, z: -129.16028}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -33891,7 +33891,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 71449f662be850844969dd4741a13262, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.409
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 0
   Mute: 0
