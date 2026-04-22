@@ -10,11 +10,11 @@ public class SecurityCamera : EnemyVision
     [Header("Visualization")]
     [SerializeField] private bool showVisionLines = true;
     [SerializeField] private Color visionColor = Color.red;
+    [SerializeField] private int rayCount = 15;
 
     private float currentAngle = 0f;
     private float direction = 1f;
-    private LineRenderer leftLine;
-    private LineRenderer rightLine;
+    private LineRenderer[] visionLines;
 
     void Start()
     {
@@ -54,24 +54,22 @@ public class SecurityCamera : EnemyVision
 
     private void CreateVisionLines()
     {
-        GameObject leftObj = new GameObject("LeftVisionLine");
-        leftObj.transform.parent = transform;
-        leftObj.transform.localPosition = Vector3.zero;
-        leftLine = leftObj.AddComponent<LineRenderer>();
+        visionLines = new LineRenderer[rayCount];
 
-        GameObject rightObj = new GameObject("RightVisionLine");
-        rightObj.transform.parent = transform;
-        rightObj.transform.localPosition = Vector3.zero;
-        rightLine = rightObj.AddComponent<LineRenderer>();
-
-        SetupLineRenderer(leftLine);
-        SetupLineRenderer(rightLine);
+        for (int i = 0; i < rayCount; i++)
+        {
+            GameObject lineObj = new GameObject($"VisionLine_{i}");
+            lineObj.transform.parent = transform;
+            lineObj.transform.localPosition = Vector3.zero;
+            visionLines[i] = lineObj.AddComponent<LineRenderer>();
+            SetupLineRenderer(visionLines[i]);
+        }
     }
 
     private void SetupLineRenderer(LineRenderer line)
     {
-        line.startWidth = 0.1f;
-        line.endWidth = 0.1f;
+        line.startWidth = 0.02f;
+        line.endWidth = 0.02f;
         line.material = new Material(Shader.Find("Sprites/Default"));
         line.startColor = visionColor;
         line.endColor = visionColor;
@@ -80,34 +78,24 @@ public class SecurityCamera : EnemyVision
 
     private void UpdateVisionLines()
     {
-        if (leftLine != null)
+        float halfAngle = viewAngle / 2f;
+
+        for (int i = 0; i < rayCount; i++)
         {
-            Vector3 leftDir = Quaternion.Euler(0, -viewAngle / 2, 0) * transform.forward;
+            float t = (float)i / (rayCount - 1);
+            float angle = Mathf.Lerp(-halfAngle, halfAngle, t);
+            Vector3 dir = Quaternion.Euler(0, angle, 0) * transform.forward;
+
             RaycastHit hit;
             float distance = viewRange;
 
-            if (Physics.Raycast(transform.position, leftDir, out hit, viewRange, obstacleMask))
+            if (Physics.Raycast(transform.position, dir, out hit, viewRange, obstacleMask))
             {
                 distance = hit.distance;
             }
 
-            leftLine.SetPosition(0, transform.position);
-            leftLine.SetPosition(1, transform.position + leftDir * distance);
-        }
-
-        if (rightLine != null)
-        {
-            Vector3 rightDir = Quaternion.Euler(0, viewAngle / 2, 0) * transform.forward;
-            RaycastHit hit;
-            float distance = viewRange;
-
-            if (Physics.Raycast(transform.position, rightDir, out hit, viewRange, obstacleMask))
-            {
-                distance = hit.distance;
-            }
-
-            rightLine.SetPosition(0, transform.position);
-            rightLine.SetPosition(1, transform.position + rightDir * distance);
+            visionLines[i].SetPosition(0, transform.position);
+            visionLines[i].SetPosition(1, transform.position + dir * distance);
         }
     }
 
@@ -118,7 +106,12 @@ public class SecurityCamera : EnemyVision
 
     void OnDestroy()
     {
-        if (leftLine != null) Destroy(leftLine.gameObject);
-        if (rightLine != null) Destroy(rightLine.gameObject);
+        if (visionLines != null)
+        {
+            foreach (var line in visionLines)
+            {
+                if (line != null) Destroy(line.gameObject);
+            }
+        }
     }
 }

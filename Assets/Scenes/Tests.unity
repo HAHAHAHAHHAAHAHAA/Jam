@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 276670482}
   - component: {fileID: 276670481}
   - component: {fileID: 276670485}
+  - component: {fileID: 276670486}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -301,6 +302,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &276670486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276670480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 869e4750556d3874b87b2bad6e1ae0fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameOverManager
+  fadeImage: {fileID: 0}
+  fadeDuration: 1
+  delayBeforeRestart: 2
 --- !u!4 &335137519 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3376957158744583261, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
