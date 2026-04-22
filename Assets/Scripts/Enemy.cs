@@ -107,8 +107,30 @@ public class Enemy : MonoBehaviour
 
         if (Time.time < nextAttackTime) return;
 
-        nextAttackTime = Time.time + attackCooldown;
-        Shoot();
+        if (HasLineOfSight())
+        {
+            nextAttackTime = Time.time + attackCooldown;
+            Shoot();
+        }
+        else
+        {
+            isAttacking = false;
+            isChasing = true;
+            Chase();
+        }
+    }
+
+    private bool HasLineOfSight()
+    {
+        Vector3 directionToPlayer = player.position - firePoint.position;
+        float distanceToPlayer = directionToPlayer.magnitude;
+
+        RaycastHit hit;
+        if (Physics.Raycast(firePoint.position, directionToPlayer, out hit, distanceToPlayer))
+        {
+            return hit.transform.CompareTag("Player");
+        }
+        return false;
     }
     private void StopMoving()
     {
@@ -182,6 +204,9 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        animator.SetBool("Idle", false);
+        animator.SetBool("Running", false);
+        animator.SetBool("Dead", true);
         isDead = true;
         isChasing = false;
         isAttacking = false;
