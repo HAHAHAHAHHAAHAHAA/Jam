@@ -1,141 +1,141 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class ArcadeCarController : MonoBehaviour
+public class CarController : MonoBehaviour
 {
-    [Header("Скорости")]
-    [SerializeField] private float acceleration = 30f;
-    [SerializeField] private float brakeDeceleration = 15f;
-    [SerializeField] private float coastDeceleration = 3f;
-    [SerializeField] private float maxSpeed = 40f;
-    [SerializeField] private float reverseSpeed = 15f;
+    [Header("Движение")]
+    [SerializeField] private float motorTorque = 600f;
+    [SerializeField] private float brakeTorque = 3000f;
+    [SerializeField] private float maxSteeringAngle = 28f;
 
-    [Header("Поворот")]
-    [SerializeField] private float minTurnSpeed = 20f;
-    [SerializeField] private float maxTurnSpeed = 90f;
-    [SerializeField] private float fullTurnSpeedThreshold = 20f;
-    [SerializeField] private float steeringSmoothTime = 0.1f;
+    [Header("Steering Smoothing")]
+    [SerializeField] private float steeringSpeed = 3f;
+    [SerializeField] private float brakeForce = 4000f;
 
-    [Header("Инерция и занос")]
-    [SerializeField] private float driftFactor = 0.95f;
+    [Header("Engine Sound")]
+    [SerializeField] private AudioSource engineSource;
+    [SerializeField] private float minVolume = 0.1f;
+    [SerializeField] private float maxVolume = 1f;
+    [SerializeField] private float volumeSpeed = 2f;
 
-    [Header("Визуал колёс")]
+    [Header("Колёса")]
+    [SerializeField] private WheelCollider frontLeftWheel;
+    [SerializeField] private WheelCollider frontRightWheel;
+    [SerializeField] private WheelCollider rearLeftWheel;
+    [SerializeField] private WheelCollider rearRightWheel;
+
+    [Header("Визуал")]
     [SerializeField] private Transform frontLeftMesh;
     [SerializeField] private Transform frontRightMesh;
     [SerializeField] private Transform rearLeftMesh;
     [SerializeField] private Transform rearRightMesh;
-    [SerializeField] private float maxVisualTurnAngle = 30f;
-    [SerializeField] private float wheelRotationSpeed = 360f;
-
-    private float currentSpeed = 0f;
-    private float currentSteerAngle = 0f;
-    private float steerVelocity = 0f;
-    private float wheelRotation = 0f;
 
     private float horizontalInput;
     private float verticalInput;
+    private float currentSteeringAngle;
+    private float targetSteeringAngle;
     private bool isBraking;
-
-    private Rigidbody rb;
+    private float currentVolume = 0.1f;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            // Замораживаем только вращение по осям X и Z, чтобы машина не опрокидывалась
-            // Ось Y оставляем свободной для поворотов рулём
-            rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
-        }
+        LockCursor(true);
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        if (engineSource != null)
+        {
+            engineSource.volume = minVolume;
+            engineSource.Play();
+        }
     }
 
     void Update()
     {
-        HandleMovement();
-        UpdateWheelVisuals();
+        HandleMotor();
+        HandleSteering();
+        UpdateWheelMeshes();
+        HandleEngineSound();
     }
 
-    private void HandleMovement()
+    private void HandleMotor()
     {
-        // === Управление скоростью ===
-        float targetSpeed = 0f;
-        if (verticalInput > 0.1f)
-            targetSpeed = maxSpeed;
-        else if (verticalInput < -0.1f)
-            targetSpeed = -reverseSpeed;
+        rearLeftWheel.motorTorque = verticalInput * motorTorque;
+        rearRightWheel.motorTorque = verticalInput * motorTorque;
 
-        float rate = acceleration;
         if (isBraking)
-            rate = brakeDeceleration;
-        else if (Mathf.Abs(verticalInput) < 0.1f)
-            rate = coastDeceleration;
-
-        if (Mathf.Abs(targetSpeed) > 0.01f)
         {
-            currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, rate * Time.deltaTime);
+            frontLeftWheel.brakeTorque = brakeForce;
+            frontRightWheel.brakeTorque = brakeForce;
+            rearLeftWheel.brakeTorque = brakeForce;
+            rearRightWheel.brakeTorque = brakeForce;
         }
         else
         {
-            currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, rate * Time.deltaTime);
+            frontLeftWheel.brakeTorque = 0;
+            frontRightWheel.brakeTorque = 0;
+            rearLeftWheel.brakeTorque = 0;
+            rearRightWheel.brakeTorque = 0;
         }
+    }
 
-        // === Поворот с динамической скоростью ===
-        float turnSpeedFactor = Mathf.Clamp01(Mathf.Abs(currentSpeed) / fullTurnSpeedThreshold);
-        float currentTurnSpeed = Mathf.Lerp(minTurnSpeed, maxTurnSpeed, turnSpeedFactor);
+    private void HandleSteering()
+    {
+        targetSteeringAngle = maxSteeringAngle * horizontalInput;
+        currentSteeringAngle = Mathf.Lerp(currentSteeringAngle, targetSteeringAngle, Time.deltaTime * steeringSpeed);
 
-        float targetSteer = horizontalInput * currentTurnSpeed;
-        currentSteerAngle = Mathf.SmoothDamp(currentSteerAngle, targetSteer, ref steerVelocity, steeringSmoothTime);
+        frontLeftWheel.steerAngle = currentSteeringAngle;
+        frontRightWheel.steerAngle = currentSteeringAngle;
+    }
 
-        transform.Rotate(0f, currentSteerAngle * Time.deltaTime, 0f);
+    private void HandleEngineSound()
+    {
+        if (engineSource == null) return;
 
-        // === Перемещение с учётом гравитации ===
-        Vector3 forwardVelocity = transform.forward * currentSpeed;
+        float targetVolume = Mathf.Abs(verticalInput);
+        targetVolume = Mathf.Clamp(targetVolume, minVolume, maxVolume);
 
-        if (rb != null)
+        currentVolume = Mathf.Lerp(currentVolume, targetVolume, Time.deltaTime * volumeSpeed);
+
+        if (AudioManager.Instance != null)
         {
-            // Сохраняем текущую вертикальную скорость (гравитация/прыжки)
-            float verticalVelocity = rb.linearVelocity.y;
-
-            // Боковая скорость с учётом дрифта
-            Vector3 lateralVelocity = transform.right * Vector3.Dot(rb.linearVelocity, transform.right);
-
-            // Итоговая скорость
-            Vector3 newVelocity = forwardVelocity + lateralVelocity * driftFactor;
-            newVelocity.y = verticalVelocity; // <-- важно: гравитация не теряется
-
-            rb.linearVelocity = newVelocity;
+            engineSource.volume = currentVolume * AudioManager.Instance.GetSFXVolume() * AudioManager.Instance.GetMasterVolume();
         }
         else
         {
-            // Без Rigidbody гравитация не работает — только для отладки
-            transform.position += forwardVelocity * Time.deltaTime;
+            engineSource.volume = currentVolume;
         }
     }
 
-    private void UpdateWheelVisuals()
+    private void UpdateWheelMeshes()
     {
-        wheelRotation += currentSpeed * wheelRotationSpeed * Time.deltaTime;
-
-        float visualSteer = horizontalInput * maxVisualTurnAngle;
-
-        RotateWheel(frontLeftMesh, visualSteer);
-        RotateWheel(frontRightMesh, visualSteer);
-        RotateWheel(rearLeftMesh, 0f);
-        RotateWheel(rearRightMesh, 0f);
+        UpdateWheelMesh(frontLeftWheel, frontLeftMesh);
+        UpdateWheelMesh(frontRightWheel, frontRightMesh);
+        UpdateWheelMesh(rearLeftWheel, rearLeftMesh);
+        UpdateWheelMesh(rearRightWheel, rearRightMesh);
     }
 
-    private void RotateWheel(Transform wheel, float steerAngle)
+    private void UpdateWheelMesh(WheelCollider collider, Transform mesh)
     {
-        if (wheel == null) return;
+        if (mesh == null) return;
 
-        wheel.localRotation = Quaternion.Euler(
-            wheelRotation,
-            steerAngle,
-            0f
-        );
+        Vector3 position;
+        Quaternion rotation;
+        collider.GetWorldPose(out position, out rotation);
+        mesh.position = position;
+        mesh.rotation = rotation;
+    }
+
+    private void LockCursor(bool locked)
+    {
+        if (locked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     public void OnMove(InputValue value)

@@ -49,8 +49,8 @@ public class ComicManager : MonoBehaviour
 
         AudioManager.Instance?.SetSFXVolume(0f);
 
-       // CarController car = FindObjectOfType<CarController>();
-       // if (car != null) car.enabled = false;
+        CarController car = FindObjectOfType<CarController>();
+        if (car != null) car.enabled = false;
 
         CarAI carAI = FindObjectOfType<CarAI>();
         if (carAI != null) carAI.enabled = false;
