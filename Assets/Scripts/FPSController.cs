@@ -193,7 +193,13 @@ public class FPSController : MonoBehaviour
             currentWeapon.Reload();
         }
     }
-
+    public void OnToggleSettings(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            SettingsManager.Instance.ToggleSettings();
+        }
+    }
     public void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();

@@ -1,14 +1,17 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
-
+    [SerializeField] private Slider sensitivitySlider;
     [SerializeField] private float defaultSensitivity = 2f;
     [SerializeField] private float defaultMasterVolume = 1f;
     [SerializeField] private float defaultMusicVolume = 1f;
     [SerializeField] private float defaultSFXVolume = 1f;
-
+    [SerializeField] private GameObject settingsPanel;
+    private bool isSettingsOpen = false;
     private float mouseSensitivity;
     private float masterVolume;
     private float musicVolume;
@@ -29,7 +32,14 @@ public class SettingsManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    void Start()
+    {
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.value = mouseSensitivity;
+            sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+        }
+    }
     private void LoadSettings()
     {
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", defaultSensitivity);
@@ -60,6 +70,19 @@ public class SettingsManager : MonoBehaviour
         OnSettingsChanged?.Invoke();
     }
 
+    public void ToggleSettings()
+    {
+        isSettingsOpen = !isSettingsOpen;
+
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(isSettingsOpen);
+        }
+
+        Cursor.lockState = isSettingsOpen ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = isSettingsOpen;
+        Time.timeScale = isSettingsOpen ? 0f : 1f;
+    }
     public void SetSensitivity(float value)
     {
         mouseSensitivity = value;
@@ -88,6 +111,12 @@ public class SettingsManager : MonoBehaviour
         ApplySettings();
     }
 
+    public void RestartScene()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex
+        );
+    }
     public float GetSensitivity() => mouseSensitivity;
     public float GetMasterVolume() => masterVolume;
     public float GetMusicVolume() => musicVolume;
