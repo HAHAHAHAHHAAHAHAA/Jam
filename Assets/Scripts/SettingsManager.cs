@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance { get; private set; }
-
+    [SerializeField] private Slider sensitivitySlider;
     [SerializeField] private float defaultSensitivity = 2f;
     [SerializeField] private float defaultMasterVolume = 1f;
     [SerializeField] private float defaultMusicVolume = 1f;
@@ -31,7 +32,14 @@ public class SettingsManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    void Start()
+    {
+        if (sensitivitySlider != null)
+        {
+            sensitivitySlider.value = mouseSensitivity;
+            sensitivitySlider.onValueChanged.AddListener(SetSensitivity);
+        }
+    }
     private void LoadSettings()
     {
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", defaultSensitivity);
