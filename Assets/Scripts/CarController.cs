@@ -55,7 +55,10 @@ public class CarController : MonoBehaviour
         UpdateWheelMeshes();
         HandleEngineSound();
     }
-
+    private void FixedUpdate()
+    {
+        StabilizeCar();
+    }
     private void HandleMotor()
     {
         rearLeftWheel.motorTorque = verticalInput * motorTorque;
@@ -63,8 +66,8 @@ public class CarController : MonoBehaviour
 
         if (isBraking)
         {
-            frontLeftWheel.brakeTorque = brakeForce;
-            frontRightWheel.brakeTorque = brakeForce;
+            frontLeftWheel.brakeTorque = brakeTorque;
+            frontRightWheel.brakeTorque = brakeTorque;
             rearLeftWheel.brakeTorque = brakeForce;
             rearRightWheel.brakeTorque = brakeForce;
         }
@@ -123,7 +126,13 @@ public class CarController : MonoBehaviour
         mesh.position = position;
         mesh.rotation = rotation;
     }
+    private void StabilizeCar()
+    {
+        Quaternion currentRotation = transform.rotation;
+        Quaternion targetRotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, 0f);
 
+        transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.fixedDeltaTime * 0.1f);
+    }
     private void LockCursor(bool locked)
     {
         if (locked)
