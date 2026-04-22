@@ -1303,7 +1303,7 @@ GameObject:
   - component: {fileID: 535030708}
   - component: {fileID: 535030707}
   m_Layer: 0
-  m_Name: al
+  m_Name: al2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1987,31 +1987,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -1812909498023395591, guid: 66df5593ed729cc4eb00000f0ccd14be, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.30715582
+      value: 0.38483867
       objectReference: {fileID: 0}
     - target: {fileID: -1812909498023395591, guid: 66df5593ed729cc4eb00000f0ccd14be, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.03502608
+      value: -0.27933896
       objectReference: {fileID: 0}
     - target: {fileID: -1812909498023395591, guid: 66df5593ed729cc4eb00000f0ccd14be, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7868671
+      value: -0.7222076
       objectReference: {fileID: 0}
     - target: {fileID: -1812909498023395591, guid: 66df5593ed729cc4eb00000f0ccd14be, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.5341055
+      value: -0.5022799
       objectReference: {fileID: 0}
     - target: {fileID: -1812909498023395591, guid: 66df5593ed729cc4eb00000f0ccd14be, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -54.987
+      value: -70.136
       objectReference: {fileID: 0}
     - target: {fileID: -1812909498023395591, guid: 66df5593ed729cc4eb00000f0ccd14be, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -114.812
+      value: -125.897
       objectReference: {fileID: 0}
     - target: {fileID: -1812909498023395591, guid: 66df5593ed729cc4eb00000f0ccd14be, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -41.907
+      value: 2.849
       objectReference: {fileID: 0}
     - target: {fileID: -1781356600409242780, guid: 66df5593ed729cc4eb00000f0ccd14be, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -5601,7 +5601,7 @@ GameObject:
   - component: {fileID: 2076944880}
   - component: {fileID: 2076944879}
   m_Layer: 0
-  m_Name: al
+  m_Name: al1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
