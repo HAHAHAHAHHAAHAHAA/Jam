@@ -4,10 +4,10 @@ using UnityEngine.UI;
 public class EnemyVision : MonoBehaviour
 {
     [Header("Vision")]
-    [SerializeField] private float viewRange = 15f;
-    [SerializeField] private float viewAngle = 60f;
+    [SerializeField] protected float viewRange = 15f;
+    [SerializeField] protected float viewAngle = 60f;
     [SerializeField] private float detectionRange = 3f;
-    [SerializeField] private LayerMask obstacleMask;
+    [SerializeField] protected LayerMask obstacleMask;
     [SerializeField] private Transform player;
 
     [Header("Detection")]
