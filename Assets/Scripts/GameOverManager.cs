@@ -19,22 +19,12 @@ public class GameOverManager : MonoBehaviour
         Instance = this;
     }
 
-    void Start()
-    {
-        if (fadeImage != null)
-        {
-            Color color = fadeImage.color;
-            color.a = 0f;
-            fadeImage.color = color;
-            fadeImage.gameObject.SetActive(true);
-        }
-    }
-
     public void GameOver()
     {
         if (isGameOver) return;
 
         isGameOver = true;
+        fadeImage.gameObject.SetActive(true);
         Time.timeScale = 0f;
         StartCoroutine(GameOverSequence());
     }
