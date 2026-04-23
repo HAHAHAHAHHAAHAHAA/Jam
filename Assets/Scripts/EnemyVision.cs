@@ -83,7 +83,7 @@ public class EnemyVision : MonoBehaviour
     {
         if (playerController != null && playerController.IsCrouching())
         {
-            return viewRange * 0.5f;
+            return viewRange * 0.95f;
         }
         return viewRange;
     }

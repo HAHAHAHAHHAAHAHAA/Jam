@@ -3,13 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class Folder : MonoBehaviour, IInteractable
 {
+    public Animator animator;
+    public GameObject player;
     public void Interact()
     {
-
+        ColletFolder();
     }
     public void ColletFolder()
     {
-        SceneManager.LoadScene("Stoorm");
-        Destroy(gameObject);
+        FPSController FPSC = player.GetComponent<FPSController>();
+        FPSC.enabled = false;
+        animator.enabled = true;
     }
 }
