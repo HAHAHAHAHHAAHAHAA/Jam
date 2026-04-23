@@ -40,6 +40,22 @@ public class AudioManager : MonoBehaviour
             Destroy(sfxObject, clip.length);
         }
     }
+    public void PlaySound2D(AudioClip clip, float volume = 1f)
+    {
+        if (clip == null || sfxPrefab == null) return;
+
+        GameObject sfxObject = Instantiate(sfxPrefab, Vector3.zero, Quaternion.identity);
+        AudioSource source = sfxObject.GetComponent<AudioSource>();
+
+        if (source != null)
+        {
+            source.spatialBlend = 0f;
+            source.clip = clip;
+            source.volume = volume * sfxVolume * masterVolume;
+            source.Play();
+            Destroy(sfxObject, clip.length);
+        }
+    }
     public void PlaySoundOneShot(AudioClip clip, float volume = 1f)
     {
         if (clip == null || sfxPrefab == null) return;
