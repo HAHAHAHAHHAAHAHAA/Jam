@@ -14,7 +14,14 @@ public class FPSController : MonoBehaviour
     [SerializeField] private float walkStepInterval = 0.5f;
     [SerializeField] private float sprintStepInterval = 0.3f;
     [SerializeField] private float crouchStepInterval = 0.7f;
+    [Header("Weapon Bob")]
+    [SerializeField] private Transform weaponHolder;
+    [SerializeField] private float bobSpeed = 3f;
+    [SerializeField] private float bobAmount = 0.03f;
 
+    private Vector3 originalWeaponPos;
+    private float bobTimer = 0f;
+    private bool wasMoving = false;
     private float stepTimer = 0f;
     private float currentStepInterval => isCrouching ? crouchStepInterval : (isSprinting ? sprintStepInterval : walkStepInterval);
     private CharacterController controller;
@@ -37,7 +44,10 @@ public class FPSController : MonoBehaviour
         LockCursor(true);
         SetCrouchState(false);
         currentWeapon = GetComponentInChildren<Weapon>();
-
+        if (weaponHolder != null)
+        {
+            originalWeaponPos = weaponHolder.localPosition;
+        }
         if (SettingsManager.Instance != null)
         {
             mouseSensitivity = SettingsManager.Instance.GetSensitivity();
@@ -63,6 +73,7 @@ public class FPSController : MonoBehaviour
         HandleMouseLook();
         HandleMovement();
         HandleFootsteps();
+        HandleWeaponBob();
     }
 
     private void UpdateSensitivity()
@@ -113,7 +124,29 @@ public class FPSController : MonoBehaviour
         camPos.y = isCrouching ? 0.3f : 0.6f;
         playerCamera.transform.localPosition = camPos;
     }
+    private void HandleWeaponBob()
+    {
+        if (weaponHolder == null) return;
 
+        bool isMoving = moveInput.magnitude > 0.1f && controller.isGrounded;
+
+        if (isMoving)
+        {
+            float currentBobSpeed = bobSpeed * (isSprinting ? 2f : 1f);
+            bobTimer += Time.deltaTime * currentBobSpeed;
+            float bobY = Mathf.Sin(bobTimer) * bobAmount;
+            weaponHolder.localPosition = originalWeaponPos + new Vector3(0, bobY, 0);
+            wasMoving = true;
+        }
+        else if (wasMoving)
+        {
+            weaponHolder.localPosition = Vector3.Lerp(weaponHolder.localPosition, originalWeaponPos, Time.deltaTime * 10f);
+            if (Vector3.Distance(weaponHolder.localPosition, originalWeaponPos) < 0.001f)
+            {
+                wasMoving = false;
+            }
+        }
+    }
     private void HandleMouseLook()
     {
         yaw += lookInput.x * mouseSensitivity;

@@ -148,6 +148,26 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
+      propertyPath: bobSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
+      propertyPath: bobAmount
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
+      propertyPath: walkSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
+      propertyPath: sprintSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
+      propertyPath: weaponHolder
+      value: 
+      objectReference: {fileID: 1536960519}
+    - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
       propertyPath: walkStepInterval
       value: 0.6
       objectReference: {fileID: 0}
