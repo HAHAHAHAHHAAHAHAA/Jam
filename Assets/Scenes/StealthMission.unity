@@ -503,6 +503,10 @@ PrefabInstance:
       propertyPath: m_RenderPostProcessing
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3369077745309490047, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
       propertyPath: walkSpeed
       value: 3
