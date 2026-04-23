@@ -691,6 +691,10 @@ PrefabInstance:
       propertyPath: chaseMemoryTime
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 4154836964993780399, guid: ea02ba136cf6c204eba3ba389a1ba057, type: 3}
+      propertyPath: customMuzzleFlash
+      value: 
+      objectReference: {fileID: 7030894258443181081, guid: bfce86590d987c7408b2157d1d449678, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1724,6 +1728,10 @@ PrefabInstance:
       propertyPath: chaseMemoryTime
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 4154836964993780399, guid: ea02ba136cf6c204eba3ba389a1ba057, type: 3}
+      propertyPath: customMuzzleFlash
+      value: 
+      objectReference: {fileID: 7030894258443181081, guid: bfce86590d987c7408b2157d1d449678, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4408,6 +4416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ea2e197f01d5204b9d1a0124f7ec8cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsManager
+  sensitivitySlider: {fileID: 0}
   defaultSensitivity: 0.5
   defaultMasterVolume: 1
   defaultMusicVolume: 1
@@ -5261,6 +5270,10 @@ PrefabInstance:
       propertyPath: chaseMemoryTime
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 4154836964993780399, guid: ea02ba136cf6c204eba3ba389a1ba057, type: 3}
+      propertyPath: customMuzzleFlash
+      value: 
+      objectReference: {fileID: 7030894258443181081, guid: bfce86590d987c7408b2157d1d449678, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5745,6 +5758,10 @@ PrefabInstance:
       propertyPath: chaseMemoryTime
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 4154836964993780399, guid: ea02ba136cf6c204eba3ba389a1ba057, type: 3}
+      propertyPath: customMuzzleFlash
+      value: 
+      objectReference: {fileID: 7030894258443181081, guid: bfce86590d987c7408b2157d1d449678, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
