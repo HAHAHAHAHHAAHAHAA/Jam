@@ -12859,6 +12859,7 @@ GameObject:
   m_Component:
   - component: {fileID: 341345858}
   - component: {fileID: 341345859}
+  - component: {fileID: 341345860}
   m_Layer: 0
   m_Name: Scene1
   m_TagString: Untagged
@@ -12918,6 +12919,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &341345860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341345857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb5dcbdb021045f46a018196a4f80ace, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CutScene1
 --- !u!1001 &346572851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26129,7 +26142,7 @@ MonoBehaviour:
   version: 2
   globalVolume: 0
   mode: 1
-  size: {x: 698.057, y: 36.052315, z: 841.61865}
+  size: {x: 698.057, y: 72.320145, z: 841.61865}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -26167,7 +26180,7 @@ Transform:
   m_GameObject: {fileID: 728842408}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 98.05612, y: 8.533855, z: -129.16028}
+  m_LocalPosition: {x: 98.05612, y: 25.590752, z: -129.16028}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
