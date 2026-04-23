@@ -74,14 +74,14 @@ public class SettingsManager : MonoBehaviour
     {
         isSettingsOpen = !isSettingsOpen;
 
-        if (settingsPanel != null)
-        {
-            settingsPanel.SetActive(isSettingsOpen);
-        }
+        if (settingsPanel != null) settingsPanel.SetActive(isSettingsOpen);
 
         Cursor.lockState = isSettingsOpen ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isSettingsOpen;
         Time.timeScale = isSettingsOpen ? 0f : 1f;
+
+        FPSController fps = FindObjectOfType<FPSController>();
+        if (fps != null) fps.SetInputEnabled(!isSettingsOpen);
     }
     public void SetSensitivity(float value)
     {
