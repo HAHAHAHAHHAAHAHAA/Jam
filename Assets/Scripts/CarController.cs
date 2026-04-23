@@ -177,4 +177,8 @@ public class CarController : MonoBehaviour
     {
         isBraking = value.isPressed;
     }
+    public void OnToggleSettings(InputValue value)
+    {
+        SettingsManager.Instance.ToggleSettings();
+    }
 }
