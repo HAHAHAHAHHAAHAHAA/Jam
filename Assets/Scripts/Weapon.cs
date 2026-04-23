@@ -57,11 +57,11 @@ public class Weapon : MonoBehaviour
 
         if (customMuzzleFlash != null)
         {
-            ParticleManager.Instance?.PlayParticle(customMuzzleFlash, transform.position, transform.rotation, 0.5f);
+            ParticleManager.Instance?.PlayParticle(customMuzzleFlash, firePoint.transform.position, transform.rotation, 0.5f);
         }
         else
         {
-            ParticleManager.Instance?.PlayMuzzleFlash(transform.position, transform.rotation);
+            ParticleManager.Instance?.PlayMuzzleFlash(firePoint.transform.position, transform.rotation);
         }
 
         if (shotClip != null)
