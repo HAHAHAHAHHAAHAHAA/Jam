@@ -149,11 +149,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
       propertyPath: bobSpeed
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
       propertyPath: bobAmount
-      value: 0.03
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 5310911453815577697, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
       propertyPath: walkSpeed
@@ -1229,9 +1229,10 @@ GameObject:
   - component: {fileID: 277387224}
   - component: {fileID: 277387223}
   - component: {fileID: 277387222}
+  - component: {fileID: 277387226}
   m_Layer: 3
   m_Name: wooden_door.006_Cube.001
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -1330,6 +1331,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &277387226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 277387221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d47084e6548ff408789f14ccdccd32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EndDoor
 --- !u!1 &298357106
 GameObject:
   m_ObjectHideFlags: 0
@@ -6280,7 +6293,7 @@ Transform:
   m_GameObject: {fileID: 1536960518}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.027440012, y: -0.21399999, z: 0.44344}
+  m_LocalPosition: {x: 0.153, y: -0.21399999, z: 0.443}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
