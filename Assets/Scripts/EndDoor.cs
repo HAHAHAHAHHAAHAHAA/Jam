@@ -5,6 +5,7 @@ public class EndDoor : MonoBehaviour,IInteractable
 {
     public void Interact()
     {
-        SceneManager.LoadScene("cutscene1");
+        Debug.Log("AZAZ");
+        SceneManager.LoadScene("zalupa");
     }
 }

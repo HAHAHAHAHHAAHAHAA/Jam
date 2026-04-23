@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Stoorm.unity
     guid: 3befa2078e904e34eb88b76c9b1a9116
   - enabled: 1
-    path: Assets/Scenes/cutscene 1.unity
+    path: Assets/Scenes/zalupa.unity
     guid: 1c61e4e367f6d7f4eb34db287db55ccc
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 745fd71528f23094382fcdcfaabfdaf0, type: 2}

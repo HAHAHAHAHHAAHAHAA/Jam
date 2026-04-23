@@ -149,7 +149,7 @@ public class EnemyVision : MonoBehaviour
 
         if (distanceToShot <= viewRange)
         {
-            currentDetection += 0.9f;
+            currentDetection += 1f;
             if (currentDetection >= 1f)
             {
                 currentDetection = 1f;
