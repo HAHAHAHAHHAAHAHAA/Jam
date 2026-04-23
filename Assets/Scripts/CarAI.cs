@@ -5,6 +5,7 @@ public class CarAI : MonoBehaviour
     [Header("Navigation")]
     [SerializeField] private Transform[] waypoints;
     [SerializeField] private float speed = 5f;
+    [SerializeField] private float startDelay = 2f;
 
     [Header("Distance Check")]
     [SerializeField] private Transform player;
@@ -15,16 +16,29 @@ public class CarAI : MonoBehaviour
     private bool isGameEnded = false;
     private bool isWaitingForVictory = false;
     private float victoryTimer = 0f;
+    private float startTimer = 0f;
+    private bool hasStarted = false;
 
     void Start()
     {
         if (player == null) player = GameObject.FindGameObjectWithTag("Player").transform;
         if (waypoints.Length > 0) targetPosition = waypoints[0].position;
+        startTimer = startDelay;
     }
 
     void Update()
     {
         if (isGameEnded) return;
+
+        if (!hasStarted)
+        {
+            startTimer -= Time.deltaTime;
+            if (startTimer <= 0f)
+            {
+                hasStarted = true;
+            }
+            return;
+        }
 
         if (isWaitingForVictory)
         {
@@ -84,7 +98,7 @@ public class CarAI : MonoBehaviour
     {
         if (isGameEnded) return;
         isGameEnded = true;
-        ComicManager.Instance?.Victory();
+        TownManager.Instance?.Win();
     }
 
     private void OnDefeat()
@@ -92,6 +106,6 @@ public class CarAI : MonoBehaviour
         if (isGameEnded) return;
         isGameEnded = true;
         Debug.Log("Поражение! Игрок отдалился от машины");
-        ComicManager.Instance?.GameOver();
+        TownManager.Instance?.Lose();
     }
 }
