@@ -29,7 +29,7 @@ public class FPSController : MonoBehaviour
     private Vector2 lookInput;
     private bool isSprinting = false;
     private float mouseSensitivity;
-
+    private bool isInputEnabled = true;
     void Start()
     {
         InitializeComponents();
@@ -59,6 +59,7 @@ public class FPSController : MonoBehaviour
 
     void Update()
     {
+        if (!isInputEnabled) return;
         HandleMouseLook();
         HandleMovement();
         HandleFootsteps();
@@ -85,7 +86,10 @@ public class FPSController : MonoBehaviour
             gameObject.AddComponent<PlayerInput>();
         }
     }
-
+    public void SetInputEnabled(bool enabled)
+    {
+        isInputEnabled = enabled;
+    }
     private void LockCursor(bool locked)
     {
         if (locked)
@@ -180,46 +184,41 @@ public class FPSController : MonoBehaviour
 
     public void OnAttack(InputValue value)
     {
-        if (currentWeapon != null)
-        {
-            currentWeapon.Shoot();
-        }
+        if (!isInputEnabled) return;
+        if (currentWeapon != null) currentWeapon.Shoot();
     }
 
     public void OnReload(InputValue value)
     {
-        if (currentWeapon != null)
-        {
-            currentWeapon.Reload();
-        }
+        if (!isInputEnabled) return;
+        if (currentWeapon != null) currentWeapon.Reload();
     }
-    public void OnToggleSettings(InputValue value)
-    {
-        if (value.isPressed)
-        {
-            SettingsManager.Instance.ToggleSettings();
-        }
-    }
+
     public void OnMove(InputValue value)
     {
+        if (!isInputEnabled) return;
         moveInput = value.Get<Vector2>();
     }
 
     public void OnLook(InputValue value)
     {
+        if (!isInputEnabled) return;
         lookInput = value.Get<Vector2>();
     }
 
     public void OnCrouch(InputValue value)
     {
-        if (value.isPressed)
-        {
-            SetCrouchState(!isCrouching);
-        }
+        if (!isInputEnabled) return;
+        if (value.isPressed) SetCrouchState(!isCrouching);
     }
 
     public void OnSprint(InputValue value)
     {
+        if (!isInputEnabled) return;
         isSprinting = value.isPressed;
+    }
+    public void OnToggleSettings(InputValue value)
+    {
+        SettingsManager.Instance.ToggleSettings();
     }
 }

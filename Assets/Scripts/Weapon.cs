@@ -89,7 +89,6 @@ public class Weapon : MonoBehaviour
                 }
                 ParticleManager.Instance?.PlayBlood(hit.point);
             }
-            Debug.Log($"Попал в: {hit.collider.name}");
         }
         NotifyEnemies(transform.position, notifyRadius);
         if (bulletTrail != null)
@@ -110,8 +109,6 @@ public class Weapon : MonoBehaviour
             trail.SetPosition(1, trail.transform.InverseTransformPoint(endPoint));
             Destroy(trail.gameObject, trailDuration);
         }
-
-        Debug.Log($"Выстрел. Патроны: {currentAmmo}/{magazineSize}");
     }
     private void NotifyEnemies(Vector3 position, float radius)
     {
