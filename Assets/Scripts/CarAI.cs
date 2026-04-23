@@ -4,13 +4,13 @@ public class CarAI : MonoBehaviour
 {
     [Header("Navigation")]
     [SerializeField] private Transform[] waypoints;
-    [SerializeField] private float speed = 5f;
     [SerializeField] private float startDelay = 2f;
-
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float acceleration = 2f;
     [Header("Distance Check")]
     [SerializeField] private Transform player;
     [SerializeField] private float loseDistance = 30f;
-
+    private float currentSpeed = 0f;
     private int currentWaypoint = 0;
     private Vector3 targetPosition;
     private bool isGameEnded = false;
@@ -73,7 +73,9 @@ public class CarAI : MonoBehaviour
         }
 
         Vector3 direction = (targetPosition - transform.position).normalized;
-        transform.position += direction * speed * Time.deltaTime;
+
+        currentSpeed = Mathf.MoveTowards(currentSpeed, maxSpeed, acceleration * Time.deltaTime);
+        transform.position += direction * currentSpeed * Time.deltaTime;
 
         if (direction != Vector3.zero)
         {

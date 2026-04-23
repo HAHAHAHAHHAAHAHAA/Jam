@@ -30,7 +30,8 @@ public class TownManager : MonoBehaviour
         Cursor.visible = true;
 
         car.SetActive(false);
-        cam.transform.position = new Vector3(0,10000000,0);
+
+
         CarAI carAI = FindObjectOfType<CarAI>();
         if (carAI != null) carAI.enabled = false;
 
@@ -38,6 +39,8 @@ public class TownManager : MonoBehaviour
         {
             winCutscene.SetActive(true);
         }
+        car.gameObject.SetActive(false);
+        car.transform.position = new Vector3(0, 100, 0);
     }
 
     public void Lose()

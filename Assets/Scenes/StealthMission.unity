@@ -575,10 +575,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 727547562282648353, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1324600392727091962, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 486654693}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
 --- !u!20 &64287929 stripped
 Camera:
@@ -2454,33 +2451,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1324600392727091962, guid: 5df87bcf5cddb704a8d5648741da2953, type: 3}
   m_PrefabInstance: {fileID: 64287928}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &486654693
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 486654684}
-  serializedVersion: 5
-  m_Mass: 5
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1001 &501492884
 PrefabInstance:
   m_ObjectHideFlags: 0
